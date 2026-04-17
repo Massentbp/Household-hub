@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Household Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F4F1EC;
+  --bg2: #EDE9E2;
+  --bg3: #E5E0D8;
+  --card: #FDFCFA;
+  --ink: #1A1814;
+  --ink2: #6B6760;
+  --ink3: #9B9894;
+  --border: #D8D3CB;
+  --border2: #C8C2B8;
+  --accent: #2D5A3D;
+  --accent-light: #E8F0EA;
+  --accent2: #1A3A26;
+  --warn: #8B4A0E;
+  --warn-light: #FDF0E6;
+  --warn-border: #E8C49A;
+  --info: #1A3A6B;
+  --info-light: #E8EEF8;
+  --info-border: #9AB4D8;
+  --danger: #8B1A1A;
+  --danger-light: #F8E8E8;
+  --r: 10px;
+  --r-sm: 6px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.08), 0 8px 24px rgba(0,0,0,0.06);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ── Layout ── */
+.app { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--card);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 10;
+}
+
+.logo {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.logo-mark {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+}
+.logo-sub {
+  font-size: 11px;
+  color: var(--ink3);
+  margin-top: 1px;
+  font-family: 'DM Mono', monospace;
+}
+
+.nav { padding: 12px 10px; flex: 1; }
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 10px;
+  border-radius: var(--r-sm);
+  color: var(--ink2);
+  font-size: 13.5px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: 2px;
+  user-select: none;
+}
+.nav-item:hover { background: var(--bg2); color: var(--ink); }
+.nav-item.active { background: var(--accent-light); color: var(--accent2); font-weight: 500; }
+.nav-icon { font-size: 15px; width: 18px; text-align: center; }
+.nav-badge {
+  margin-left: auto;
+  background: var(--accent);
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-family: 'DM Mono', monospace;
+}
+
+.sidebar-footer {
+  padding: 14px;
+  border-top: 1px solid var(--border);
+}
+.user-pill {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+}
+.user-pill:hover { background: var(--bg2); }
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.user-name { font-size: 12.5px; font-weight: 500; }
+.user-loc { font-size: 11px; color: var(--ink3); }
+
+.main {
+  margin-left: 220px;
+  flex: 1;
+  min-height: 100vh;
+}
+
+.topbar {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.topbar-title { font-size: 15px; font-weight: 500; }
+.topbar-actions { display: flex; align-items: center; gap: 8px; }
+
+.content { padding: 28px; }
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+  font-family: 'DM Sans', sans-serif;
+  white-space: nowrap;
+}
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { background: var(--accent2); }
+.btn-secondary { background: var(--card); color: var(--ink); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--bg2); }
+.btn-ghost { background: none; color: var(--ink2); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--bg2); color: var(--ink); }
+.btn-danger { background: var(--danger-light); color: var(--danger); border: 1px solid #E8C4C4; }
+.btn-danger:hover { background: #F0D0D0; }
+.btn-sm { padding: 5px 11px; font-size: 12px; }
+.btn-xs { padding: 3px 8px; font-size: 11px; border-radius: 4px; }
+
+/* ── Stats ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+.stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink3); margin-bottom: 8px; font-family: 'DM Mono', monospace; }
+.stat-value { font-size: 26px; font-weight: 300; letter-spacing: -0.5px; color: var(--ink); }
+.stat-sub { font-size: 11px; color: var(--ink3); margin-top: 3px; }
+.stat-card.warn .stat-value { color: var(--warn); }
+.stat-card.info .stat-value { color: var(--info); }
+.stat-card.good .stat-value { color: var(--accent); }
+
+/* ── Alert ── */
+.alert {
+  background: var(--warn-light);
+  border: 1px solid var(--warn-border);
+  border-radius: var(--r);
+  padding: 12px 16px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--warn);
+}
+.alert-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--warn); flex-shrink: 0; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+/* ── Section header ── */
+.section-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.section-hd h2 { font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink3); font-family: 'DM Mono', monospace; }
+.section-mb { margin-bottom: 28px; }
+
+/* ── Service cards ── */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 12px;
+}
+.service-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px;
+  cursor: pointer;
+  transition: box-shadow 0.15s, border-color 0.15s;
+  position: relative;
+  box-shadow: var(--shadow);
+}
+.service-card:hover { box-shadow: var(--shadow-md); border-color: var(--border2); }
+.service-card.expiring { border-left: 3px solid #D4830A; }
+.service-card.has-bids { border-left: 3px solid #1A5FAB; }
+.service-card.add-card {
+  border: 1.5px dashed var(--border);
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: none;
+  min-height: 160px;
+}
+.service-card.add-card:hover { border-color: var(--accent); background: var(--accent-light); }
+.service-card.add-card .add-label { font-size: 13px; color: var(--ink3); }
+.service-card.add-card:hover .add-label { color: var(--accent); }
+.add-icon { font-size: 22px; color: var(--ink3); }
+.service-card.add-card:hover .add-icon { color: var(--accent); }
+
+.sc-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+.sc-icon { width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.badge { font-size: 10.5px; padding: 3px 8px; border-radius: 4px; font-weight: 500; font-family: 'DM Mono', monospace; }
+.badge-warn { background: var(--warn-light); color: var(--warn); border: 1px solid var(--warn-border); }
+.badge-info { background: var(--info-light); color: var(--info); border: 1px solid var(--info-border); }
+.badge-ok { background: var(--accent-light); color: var(--accent2); border: 1px solid #B8D8C0; }
+.sc-name { font-size: 14px; font-weight: 500; color: var(--ink); }
+.sc-provider { font-size: 12px; color: var(--ink3); margin-top: 1px; }
+.sc-bottom { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
+.sc-price { font-size: 20px; font-weight: 300; letter-spacing: -0.3px; }
+.sc-price span { font-size: 11px; font-weight: 400; color: var(--ink3); }
+.sc-date-label { font-size: 10px; color: var(--ink3); text-align: right; }
+.sc-date-val { font-size: 12px; font-weight: 500; color: var(--ink); text-align: right; }
+.invite-link { display: inline-block; margin-top: 8px; font-size: 11px; color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+.invite-link:hover { border-bottom-color: var(--accent); }
+
+/* ── Bids ── */
+.bid-row {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: var(--shadow);
+  transition: all 0.2s;
+}
+.bid-row.accepted { border-color: #9FD4B0; background: #F4FBF6; }
+.bid-row.declined { opacity: 0.4; pointer-events: none; }
+.bid-icon { width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.bid-info { flex: 1; }
+.bid-title { font-size: 13.5px; font-weight: 500; }
+.bid-detail { font-size: 12px; color: var(--ink3); margin-top: 2px; }
+.bid-price-col { text-align: right; }
+.bid-new-price { font-size: 20px; font-weight: 300; color: var(--accent); letter-spacing: -0.3px; }
+.bid-new-price span { font-size: 11px; font-weight: 400; color: var(--ink3); }
+.bid-save { font-size: 11px; color: var(--accent); margin-top: 1px; }
+.bid-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+/* ── Timeline ── */
+.timeline-table { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; box-shadow: var(--shadow); }
+.tl-row { display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-bottom: 1px solid var(--border); }
+.tl-row:last-child { border-bottom: none; }
+.tl-row:hover { background: var(--bg2); }
+.tl-month { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--ink3); width: 32px; flex-shrink: 0; }
+.tl-name { font-size: 13px; font-weight: 400; width: 150px; flex-shrink: 0; }
+.tl-bar-bg { flex: 1; height: 5px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+.tl-bar-fill { height: 100%; border-radius: 3px; }
+.tl-date { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--ink2); width: 84px; text-align: right; flex-shrink: 0; }
+.tl-price { font-size: 12px; color: var(--ink3); width: 80px; text-align: right; flex-shrink: 0; }
+
+/* ── Modal ── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(20,18,14,0.5);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  width: 440px;
+  max-width: 96vw;
+  max-height: 88vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-md);
+  transform: translateY(8px);
+  transition: transform 0.2s;
+}
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.modal-hd h2 { font-size: 16px; font-weight: 500; }
+.modal-close { background: none; border: none; font-size: 18px; color: var(--ink3); cursor: pointer; padding: 4px; border-radius: 4px; }
+.modal-close:hover { background: var(--bg2); color: var(--ink); }
+
+/* ── Forms ── */
+.form-group { margin-bottom: 14px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+label { display: block; font-size: 12px; font-weight: 500; color: var(--ink2); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'DM Mono', monospace; }
+input, select, textarea {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 9px 11px;
+  font-size: 13.5px;
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  transition: border-color 0.15s;
+  outline: none;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(45,90,61,0.1); }
+textarea { min-height: 80px; resize: vertical; }
+.form-footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+
+/* ── Service detail panel ── */
+.detail-panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+}
+.dp-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 18px; }
+.dp-icon { width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+.dp-title { font-size: 18px; font-weight: 500; letter-spacing: -0.3px; }
+.dp-provider { font-size: 13px; color: var(--ink3); margin-top: 2px; }
+.dp-actions { margin-left: auto; display: flex; gap: 8px; }
+.dp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 18px; }
+.dp-field { background: var(--bg2); border-radius: var(--r-sm); padding: 12px; }
+.dp-field-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink3); font-family: 'DM Mono', monospace; margin-bottom: 4px; }
+.dp-field-val { font-size: 15px; font-weight: 400; }
+.dp-notes { background: var(--bg2); border-radius: var(--r-sm); padding: 12px; font-size: 13px; color: var(--ink2); line-height: 1.6; }
+
+/* ── Supplier invite ── */
+.invite-box {
+  background: var(--info-light);
+  border: 1px solid var(--info-border);
+  border-radius: var(--r);
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.invite-box h3 { font-size: 13.5px; font-weight: 500; color: var(--info); margin-bottom: 8px; }
+.invite-box p { font-size: 12px; color: var(--info); opacity: 0.85; line-height: 1.5; }
+.invite-link-box {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  align-items: center;
+}
+.invite-url {
+  flex: 1;
+  background: white;
+  border: 1px solid var(--info-border);
+  border-radius: var(--r-sm);
+  padding: 7px 10px;
+  font-size: 11px;
+  font-family: 'DM Mono', monospace;
+  color: var(--info);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Supplier portal ── */
+.portal-hero {
+  text-align: center;
+  padding: 48px 20px 32px;
+}
+.portal-hero h1 { font-size: 28px; font-weight: 300; letter-spacing: -0.5px; margin-bottom: 8px; }
+.portal-hero p { font-size: 14px; color: var(--ink3); }
+.portal-card { max-width: 500px; margin: 0 auto 32px; }
+.terms-block {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 12px;
+  font-size: 12px;
+  color: var(--ink2);
+  line-height: 1.7;
+  font-family: 'DM Mono', monospace;
+  margin: 12px 0;
+}
+
+/* ── Tabs ── */
+.tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.tab { padding: 10px 16px; font-size: 13px; font-weight: 400; color: var(--ink3); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; }
+.tab:hover { color: var(--ink); }
+.tab.active { color: var(--ink); font-weight: 500; border-bottom-color: var(--accent); }
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--ink);
+  color: white;
+  padding: 12px 18px;
+  border-radius: var(--r);
+  font-size: 13px;
+  font-weight: 400;
+  z-index: 200;
+  transform: translateY(60px);
+  opacity: 0;
+  transition: all 0.25s;
+  max-width: 320px;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* ── Responsive ── */
+@media (max-width: 720px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .dp-grid { grid-template-columns: 1fr 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+}
+
+/* ── Supplier portal page ── */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── Empty state ── */
+.empty-state { text-align: center; padding: 48px 20px; color: var(--ink3); }
+.empty-state .es-icon { font-size: 32px; margin-bottom: 12px; }
+.empty-state p { font-size: 13px; }
+
+/* ── Table ── */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink3); font-family: 'DM Mono', monospace; font-weight: 500; text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+.data-table td { padding: 10px 12px; font-size: 13px; border-bottom: 1px solid var(--border); }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--bg2); }
+
+.chip { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 100px; font-weight: 500; }
+.chip-green { background: var(--accent-light); color: var(--accent2); }
+.chip-amber { background: var(--warn-light); color: var(--warn); }
+.chip-blue { background: var(--info-light); color: var(--info); }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<!-- ── Sidebar ── -->
+<nav class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">Household Hub</div>
+    <div class="logo-sub">Smart home management</div>
+  </div>
+  <div class="nav">
+    <div class="nav-item active" onclick="showPage('dashboard',this)">
+      <span class="nav-icon">⌂</span> Dashboard
+    </div>
+    <div class="nav-item" onclick="showPage('services',this)">
+      <span class="nav-icon">◫</span> Services
+    </div>
+    <div class="nav-item" onclick="showPage('bids',this)">
+      <span class="nav-icon">◈</span> Bids
+      <span class="nav-badge" id="bids-nav-badge">3</span>
+    </div>
+    <div class="nav-item" onclick="showPage('invite',this)">
+      <span class="nav-icon">↗</span> Invite suppliers
+    </div>
+    <div class="nav-item" onclick="showPage('timeline',this)">
+      <span class="nav-icon">◷</span> Timeline
+    </div>
+    <div class="nav-item" onclick="showPage('documents',this)">
+      <span class="nav-icon">◻</span> Documents
+    </div>
+    <div class="nav-item" onclick="showPage('portal-preview',this)">
+      <span class="nav-icon">◉</span> Supplier portal
+    </div>
+  </div>
+  <div class="sidebar-footer">
+    <div class="user-pill">
+      <div class="avatar">JD</div>
+      <div>
+        <div class="user-name">Jens Dalgaard</div>
+        <div class="user-loc">Slagelse, DK</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Main ── -->
+<main class="main">
+  <div class="topbar">
+    <span class="topbar-title" id="page-title">Dashboard</span>
+    <div class="topbar-actions">
+      <button class="btn btn-secondary btn-sm" onclick="openModal('add-service-modal')">+ Add service</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+  <!-- ══ DASHBOARD PAGE ══ -->
+  <div class="page active" id="page-dashboard">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Monthly total</div>
+        <div class="stat-value" id="stat-total">DKK 4,820</div>
+        <div class="stat-sub" id="stat-service-count">across 7 services</div>
+      </div>
+      <div class="stat-card warn">
+        <div class="stat-label">Renewing soon</div>
+        <div class="stat-value" id="stat-renewing">2</div>
+        <div class="stat-sub">within 60 days</div>
+      </div>
+      <div class="stat-card info">
+        <div class="stat-label">Active bids</div>
+        <div class="stat-value" id="stat-bids">3</div>
+        <div class="stat-sub">awaiting decision</div>
+      </div>
+      <div class="stat-card good">
+        <div class="stat-label">Potential savings</div>
+        <div class="stat-value" id="stat-savings">DKK 420</div>
+        <div class="stat-sub">per month if you switch</div>
+      </div>
+    </div>
+
+    <div class="alert" id="alert-bar">
+      <div class="alert-dot"></div>
+      <span id="alert-text">Car insurance with Tryg renews in <strong>18 days</strong> — 3 suppliers have submitted bids. <a href="#" onclick="showPage('bids',null);return false;" style="color:var(--warn);font-weight:500">Review bids →</a></span>
+    </div>
+
+    <div class="section-mb">
+      <div class="section-hd">
+        <h2>Your services</h2>
+        <button class="btn btn-ghost btn-sm" onclick="showPage('services',null)">View all →</button>
+      </div>
+      <div class="services-grid" id="dashboard-services"></div>
+    </div>
+
+    <div class="section-mb">
+      <div class="section-hd">
+        <h2>Recent bids</h2>
+        <button class="btn btn-ghost btn-sm" onclick="showPage('bids',null)">View all →</button>
+      </div>
+      <div id="dashboard-bids"></div>
+    </div>
+  </div>
+
+  <!-- ══ SERVICES PAGE ══ -->
+  <div class="page" id="page-services">
+    <div class="services-grid" id="all-services-grid"></div>
+  </div>
+
+  <!-- ══ BIDS PAGE ══ -->
+  <div class="page" id="page-bids">
+    <div class="tabs">
+      <div class="tab active" onclick="filterBids('pending',this)">Pending (3)</div>
+      <div class="tab" onclick="filterBids('accepted',this)">Accepted</div>
+      <div class="tab" onclick="filterBids('declined',this)">Declined</div>
+      <div class="tab" onclick="filterBids('all',this)">All</div>
+    </div>
+    <div id="bids-list"></div>
+  </div>
+
+  <!-- ══ INVITE PAGE ══ -->
+  <div class="page" id="page-invite">
+    <div style="max-width: 600px;">
+      <p style="font-size:14px;color:var(--ink2);margin-bottom:20px;line-height:1.6">
+        Choose a service, generate a unique invite link, and share it with potential suppliers. They'll see your current terms and price, then submit a competing bid directly to your dashboard.
+      </p>
+      <div class="detail-panel">
+        <div class="form-group">
+          <label>Select service to open for bids</label>
+          <select id="invite-service-select">
+            <option value="">— choose a service —</option>
+          </select>
+        </div>
+        <div id="invite-service-info" style="display:none">
+          <div class="invite-box">
+            <h3>Shareable invite link</h3>
+            <p>Send this link to suppliers. They can view your current terms and submit a bid. You stay anonymous until you accept.</p>
+            <div class="invite-link-box">
+              <div class="invite-url" id="invite-url-display">—</div>
+              <button class="btn btn-secondary btn-sm" onclick="copyInviteLink()">Copy</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Or send directly by email</label>
+            <div style="display:flex;gap:8px">
+              <input type="email" id="invite-email" placeholder="supplier@example.com" style="flex:1">
+              <button class="btn btn-primary btn-sm" onclick="sendInviteEmail()">Send invite</button>
+            </div>
+          </div>
+          <p style="font-size:11px;color:var(--ink3);margin-top:8px">The supplier will see: service type, current price, renewal date, coverage level. Your name and address remain hidden until you choose to proceed.</p>
+        </div>
+      </div>
+
+      <div class="section-hd">
+        <h2>Sent invites</h2>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)">
+        <table class="data-table" id="invites-table">
+          <thead>
+            <tr>
+              <th>Supplier</th>
+              <th>Service</th>
+              <th>Sent</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="invites-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TIMELINE PAGE ══ -->
+  <div class="page" id="page-timeline">
+    <div class="timeline-table" id="timeline-table"></div>
+  </div>
+
+  <!-- ══ DOCUMENTS PAGE ══ -->
+  <div class="page" id="page-documents">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)">
+      <table class="data-table" id="docs-table">
+        <thead>
+          <tr>
+            <th>Service</th>
+            <th>Document</th>
+            <th>Uploaded</th>
+            <th>Size</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="docs-tbody"></tbody>
+      </table>
+    </div>
+    <div style="margin-top:16px">
+      <button class="btn btn-secondary" onclick="openModal('upload-doc-modal')">+ Upload document</button>
+    </div>
+  </div>
+
+  <!-- ══ SUPPLIER PORTAL PREVIEW ══ -->
+  <div class="page" id="page-portal-preview">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:24px;max-width:560px;margin:0 auto">
+      <p style="font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);font-family:'DM Mono',monospace;margin-bottom:16px">Preview — supplier's view</p>
+      <div class="portal-hero" style="padding:24px 0 16px">
+        <h1>Submit a bid</h1>
+        <p>You have been invited to bid on a household service</p>
+      </div>
+      <div class="detail-panel" id="portal-service-display">
+        <p style="text-align:center;color:var(--ink3);font-size:13px">Select a service from the Invite page to preview how suppliers see it</p>
+      </div>
+      <div id="portal-form-area">
+        <div class="form-group">
+          <label>Company name</label>
+          <input type="text" placeholder="Your company">
+        </div>
+        <div class="form-group">
+          <label>Contact email</label>
+          <input type="email" placeholder="you@company.com">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Monthly price (DKK)</label>
+            <input type="number" placeholder="e.g. 420">
+          </div>
+          <div class="form-group">
+            <label>Contract length</label>
+            <select><option>12 months</option><option>24 months</option><option>6 months</option><option>Month-to-month</option></select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Coverage / key terms</label>
+          <textarea placeholder="Describe coverage, any exclusions, or key differences from current policy…"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Additional notes</label>
+          <textarea placeholder="Anything else you'd like the homeowner to know…" style="min-height:60px"></textarea>
+        </div>
+        <button class="btn btn-primary" style="width:100%" onclick="submitPortalBid()">Submit bid →</button>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /content -->
+</main>
+
+</div><!-- /app -->
+
+<!-- ══ ADD SERVICE MODAL ══ -->
+<div class="modal-overlay" id="add-service-modal">
+  <div class="modal">
+    <div class="modal-hd">
+      <h2>Add a service</h2>
+      <button class="modal-close" onclick="closeModal('add-service-modal')">✕</button>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Service type</label>
+        <select id="new-type">
+          <option>Car insurance</option><option>Home insurance</option>
+          <option>Electricity</option><option>Internet</option>
+          <option>Mobile plan</option><option>Heating</option>
+          <option>Water</option><option>Streaming</option>
+          <option>Lawn &amp; garden</option><option>Cleaning</option>
+          <option>Alarm / security</option><option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Emoji icon</label>
+        <input type="text" id="new-icon" placeholder="🚗" maxlength="4" style="font-size:20px;text-align:center">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Current provider</label>
+      <input type="text" id="new-provider" placeholder="e.g. Tryg Forsikring">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Monthly price (DKK)</label>
+        <input type="number" id="new-price" placeholder="e.g. 590">
+      </div>
+      <div class="form-group">
+        <label>Renewal date</label>
+        <input type="date" id="new-renewal">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Coverage / plan details</label>
+      <textarea id="new-notes" placeholder="e.g. Comprehensive, deductible DKK 2,000, includes roadside assistance…"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Upload contract (PDF)</label>
+      <input type="file" accept=".pdf,.doc,.docx" id="new-file">
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-ghost" onclick="closeModal('add-service-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addService()">Save service</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ EDIT SERVICE MODAL ══ -->
+<div class="modal-overlay" id="edit-service-modal">
+  <div class="modal">
+    <div class="modal-hd">
+      <h2>Edit service</h2>
+      <button class="modal-close" onclick="closeModal('edit-service-modal')">✕</button>
+    </div>
+    <input type="hidden" id="edit-service-id">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Service type</label>
+        <input type="text" id="edit-type">
+      </div>
+      <div class="form-group">
+        <label>Icon</label>
+        <input type="text" id="edit-icon" maxlength="4" style="font-size:20px;text-align:center">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Provider</label>
+      <input type="text" id="edit-provider">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Monthly price (DKK)</label>
+        <input type="number" id="edit-price">
+      </div>
+      <div class="form-group">
+        <label>Renewal date</label>
+        <input type="date" id="edit-renewal">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Notes / coverage</label>
+      <textarea id="edit-notes"></textarea>
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-danger btn-sm" onclick="deleteService()">Delete</button>
+      <button class="btn btn-ghost" onclick="closeModal('edit-service-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEditService()">Save changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ UPLOAD DOC MODAL ══ -->
+<div class="modal-overlay" id="upload-doc-modal">
+  <div class="modal">
+    <div class="modal-hd">
+      <h2>Upload document</h2>
+      <button class="modal-close" onclick="closeModal('upload-doc-modal')">✕</button>
+    </div>
+    <div class="form-group">
+      <label>Service</label>
+      <select id="doc-service-select"></select>
+    </div>
+    <div class="form-group">
+      <label>Document name</label>
+      <input type="text" id="doc-name" placeholder="e.g. Policy 2025.pdf">
+    </div>
+    <div class="form-group">
+      <label>File</label>
+      <input type="file" id="doc-file">
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-ghost" onclick="closeModal('upload-doc-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="uploadDoc()">Upload</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── State ──
+const iconMap = { 'Car insurance':'🚗','Home insurance':'🏠','Electricity':'⚡','Internet':'📡','Mobile plan':'📱','Heating':'🔥','Water':'💧','Streaming':'📺','Lawn & garden':'🌿','Cleaning':'🧹','Alarm / security':'🔒','Other':'📦' };
+const bgMap = { '🚗':'#E6F1FB','🏠':'#EEEDFE','⚡':'#E1F5EE','📡':'#FAECE7','📱':'#EAF3DE','🔥':'#FAEEDA','💧':'#E6F1FB','📺':'#FBEAF0','🌿':'#EAF3DE','🧹':'#F1EFE8','🔒':'#E6F1FB','📦':'#F1EFE8' };
+
+let services = [
+  {id:1,type:'Car insurance',icon:'🚗',provider:'Tryg Forsikring',price:590,renewal:'2025-05-05',notes:'Comprehensive, deductible DKK 2,000. Includes roadside assistance. Driver age 25+.'},
+  {id:2,type:'Home insurance',icon:'🏠',provider:'Codan',price:715,renewal:'2025-05-30',notes:'Full indemnity, contents up to DKK 500,000. Includes water damage and theft.'},
+  {id:3,type:'Electricity',icon:'⚡',provider:'Ørsted',price:1240,renewal:'2025-12-01',notes:'Variable tariff. Annual consumption approx 5,200 kWh.'},
+  {id:4,type:'Internet',icon:'📡',provider:'YouSee',price:399,renewal:'2026-02-03',notes:'1Gbps fibre. TV basic package included.'},
+  {id:5,type:'Mobile plan',icon:'📱',provider:'Telenor',price:279,renewal:'2026-03-15',notes:'50GB data. Unlimited calls & SMS in DK/EU.'},
+  {id:6,type:'Heating',icon:'🔥',provider:'SEAS-NVE',price:980,renewal:'2025-09-01',notes:'District heating. Metered billing with fixed connection fee.'},
+  {id:7,type:'Alarm / security',icon:'🔒',provider:'Verisure',price:349,renewal:'2025-11-20',notes:'24/7 monitoring, panic button, smoke detector.'},
+];
+
+let bids = [
+  {id:1,serviceId:1,supplier:'Alka Forsikring',price:410,contract:'12 months',coverage:'Same comprehensive coverage. Deductible DKK 2,000.',status:'pending',submitted:'2025-04-10'},
+  {id:2,serviceId:1,supplier:'Gjensidige',price:445,contract:'12 months',coverage:'Comprehensive. Deductible DKK 1,500 (better). Roadside included.',status:'pending',submitted:'2025-04-12'},
+  {id:3,serviceId:2,supplier:'Topdanmark',price:620,contract:'24 months',coverage:'Full indemnity, contents DKK 600,000. Broader water damage cover.',status:'pending',submitted:'2025-04-14'},
+];
+
+let invites = [
+  {id:1,serviceId:1,supplier:'Alka Forsikring',email:'bids@alka.dk',sent:'2025-04-08',status:'bid received'},
+  {id:2,serviceId:1,supplier:'Gjensidige',email:'erhverv@gjensidige.dk',sent:'2025-04-09',status:'bid received'},
+  {id:3,serviceId:2,supplier:'Topdanmark',email:'partner@topdanmark.dk',sent:'2025-04-11',status:'bid received'},
+  {id:4,serviceId:1,supplier:'If Forsikring',email:'salg@if.dk',sent:'2025-04-13',status:'viewed'},
+];
+
+let documents = [
+  {id:1,serviceId:1,name:'Tryg Policy 2024.pdf',date:'2024-05-05',size:'1.2 MB'},
+  {id:2,serviceId:2,name:'Codan Home Insurance Terms.pdf',date:'2024-06-01',size:'0.8 MB'},
+];
+
+let nextId = 8;
+let currentFilter = 'pending';
+
+// ── Init ──
+function init() {
+  renderDashboard();
+  renderAllServices();
+  renderBids();
+  renderTimeline();
+  renderInviteSelect();
+  renderDocuments();
+  renderInvites();
+  updateStats();
+}
+
+// ── Page navigation ──
+function showPage(name, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (el) el.classList.add('active');
+  const titles = {dashboard:'Dashboard',services:'Services',bids:'Bids',invite:'Invite suppliers',timeline:'Timeline',documents:'Documents','portal-preview':'Supplier portal preview'};
+  document.getElementById('page-title').textContent = titles[name] || name;
+}
+
+// ── Stats ──
+function updateStats() {
+  const total = services.reduce((s,sv) => s + sv.price, 0);
+  const now = new Date(); const in60 = new Date(now); in60.setDate(in60.getDate() + 60);
+  const renewing = services.filter(s => { const d = new Date(s.renewal); return d >= now && d <= in60; }).length;
+  const pending = bids.filter(b => b.status === 'pending');
+  const savings = pending.reduce((s,b) => { const svc = services.find(sv=>sv.id===b.serviceId); return svc ? s + Math.max(0, svc.price - b.price) : s; }, 0);
+  document.getElementById('stat-total').textContent = 'DKK ' + total.toLocaleString('da-DK');
+  document.getElementById('stat-service-count').textContent = 'across ' + services.length + ' services';
+  document.getElementById('stat-renewing').textContent = renewing;
+  document.getElementById('stat-bids').textContent = pending.length;
+  document.getElementById('stat-savings').textContent = 'DKK ' + savings.toLocaleString('da-DK');
+  document.getElementById('bids-nav-badge').textContent = pending.length;
+  document.getElementById('bids-nav-badge').style.display = pending.length ? '' : 'none';
+}
+
+// ── Helpers ──
+function daysUntil(dateStr) {
+  const d = new Date(dateStr); const now = new Date();
+  return Math.ceil((d - now) / (1000 * 60 * 60 * 24));
+}
+function formatDate(dateStr) {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('da-DK', {day:'numeric',month:'short',year:'numeric'});
+}
+function getIconBg(icon) { return bgMap[icon] || '#F1EFE8'; }
+
+function serviceCard(svc, onclick) {
+  const days = daysUntil(svc.renewal);
+  const myBids = bids.filter(b => b.serviceId === svc.id && b.status === 'pending');
+  let badgeHtml = `<span class="badge badge-ok">Active</span>`;
+  let cls = '';
+  if (days <= 60 && days > 0) { badgeHtml = `<span class="badge badge-warn">Renews in ${days}d</span>`; cls = ' expiring'; }
+  if (myBids.length > 0) { badgeHtml = `<span class="badge badge-info">${myBids.length} bid${myBids.length>1?'s':''}</span>`; if(!cls) cls = ' has-bids'; }
+  return `<div class="service-card${cls}" onclick="${onclick}">
+    <div class="sc-top">
+      <div class="sc-icon" style="background:${getIconBg(svc.icon)}">${svc.icon}</div>
+      ${badgeHtml}
+    </div>
+    <div class="sc-name">${svc.type}</div>
+    <div class="sc-provider">${svc.provider}</div>
+    <div class="sc-bottom">
+      <div class="sc-price">DKK ${svc.price.toLocaleString('da-DK')}<span>/mo</span></div>
+      <div><div class="sc-date-label">Renewal</div><div class="sc-date-val">${formatDate(svc.renewal)}</div></div>
+    </div>
+  </div>`;
+}
+
+// ── Dashboard ──
+function renderDashboard() {
+  const sorted = [...services].sort((a,b) => daysUntil(a.renewal) - daysUntil(b.renewal));
+  document.getElementById('dashboard-services').innerHTML =
+    sorted.slice(0,6).map(s => serviceCard(s, `openEditModal(${s.id})`)).join('') +
+    `<div class="service-card add-card" onclick="openModal('add-service-modal')">
+      <div class="add-icon">+</div>
+      <div class="add-label">Add service</div>
+    </div>`;
+  renderBidRows(document.getElementById('dashboard-bids'), bids.filter(b=>b.status==='pending').slice(0,3));
+}
+
+// ── All services ──
+function renderAllServices() {
+  const sorted = [...services].sort((a,b) => daysUntil(a.renewal) - daysUntil(b.renewal));
+  document.getElementById('all-services-grid').innerHTML =
+    sorted.map(s => serviceCard(s, `openEditModal(${s.id})`)).join('') +
+    `<div class="service-card add-card" onclick="openModal('add-service-modal')">
+      <div class="add-icon">+</div>
+      <div class="add-label">Add service</div>
+    </div>`;
+}
+
+// ── Bid rows ──
+function renderBidRows(container, bidList) {
+  if (!bidList.length) {
+    container.innerHTML = `<div class="empty-state"><div class="es-icon">◈</div><p>No bids here yet</p></div>`;
+    return;
+  }
+  container.innerHTML = bidList.map(b => {
+    const svc = services.find(s => s.id === b.serviceId);
+    const saving = svc ? svc.price - b.price : 0;
+    const savingTxt = saving > 0 ? `Save DKK ${saving.toLocaleString('da-DK')}/mo` : saving < 0 ? `DKK ${Math.abs(saving).toLocaleString('da-DK')}/mo more` : 'Same price';
+    const savingColor = saving > 0 ? 'var(--accent)' : saving < 0 ? 'var(--warn)' : 'var(--ink3)';
+    const cls = b.status === 'accepted' ? ' accepted' : b.status === 'declined' ? ' declined' : '';
+    return `<div class="bid-row${cls}" id="bid-row-${b.id}">
+      <div class="bid-icon" style="background:${svc?getIconBg(svc.icon):'#F1EFE8'}">${svc?svc.icon:'📦'}</div>
+      <div class="bid-info">
+        <div class="bid-title">${b.supplier}</div>
+        <div class="bid-detail">${svc?svc.type:''} · ${b.coverage} · ${b.contract}</div>
+      </div>
+      <div class="bid-price-col">
+        <div class="bid-new-price">DKK ${b.price.toLocaleString('da-DK')}<span>/mo</span></div>
+        <div class="bid-save" style="color:${savingColor}">${savingTxt}</div>
+      </div>
+      <div class="bid-actions">
+        ${b.status==='pending'?`<button class="btn btn-primary btn-sm" onclick="acceptBid(${b.id})">Accept</button><button class="btn btn-ghost btn-sm" onclick="declineBid(${b.id})">✕</button>`:''}
+        ${b.status==='accepted'?`<span class="chip chip-green">Accepted ✓</span>`:''}
+        ${b.status==='declined'?`<span class="chip chip-amber">Declined</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderBids() {
+  const filtered = currentFilter === 'all' ? bids : bids.filter(b => b.status === currentFilter);
+  renderBidRows(document.getElementById('bids-list'), filtered);
+}
+
+function filterBids(filter, el) {
+  currentFilter = filter;
+  document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+  if (el) el.classList.add('active');
+  renderBids();
+}
+
+function acceptBid(id) {
+  const b = bids.find(b => b.id === id);
+  if (!b) return;
+  b.status = 'accepted';
+  const svc = services.find(s => s.id === b.serviceId);
+  renderAll(); updateStats();
+  toast(`✓ Accepted bid from ${b.supplier}${svc?' for '+svc.type:''}. They will be notified.`);
+}
+function declineBid(id) {
+  const b = bids.find(b => b.id === id);
+  if (b) { b.status = 'declined'; renderAll(); updateStats(); toast('Bid declined.'); }
+}
+
+// ── Timeline ──
+function renderTimeline() {
+  const sorted = [...services].sort((a,b) => new Date(a.renewal) - new Date(b.renewal));
+  const maxDays = Math.max(...sorted.map(s => Math.max(0, daysUntil(s.renewal))));
+  const colors = ['#2D5A3D','#5DCAA5','#378ADD','#AFA9EC','#D4830A','#D4537E','#888780'];
+  document.getElementById('timeline-table').innerHTML = sorted.map((svc, i) => {
+    const days = Math.max(0, daysUntil(svc.renewal));
+    const pct = maxDays > 0 ? Math.round((days / maxDays) * 100) : 0;
+    const mo = new Date(svc.renewal).toLocaleString('en-DK',{month:'short'});
+    return `<div class="tl-row">
+      <div class="tl-month">${mo}</div>
+      <div class="tl-name">${svc.type}</div>
+      <div class="tl-bar-bg"><div class="tl-bar-fill" style="width:${Math.max(4,pct)}%;background:${colors[i%colors.length]}"></div></div>
+      <div class="tl-date">${formatDate(svc.renewal)}</div>
+      <div class="tl-price">DKK ${svc.price.toLocaleString('da-DK')}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── Invite ──
+function renderInviteSelect() {
+  const sel = document.getElementById('invite-service-select');
+  sel.innerHTML = '<option value="">— choose a service —</option>' + services.map(s => `<option value="${s.id}">${s.type} (${s.provider})</option>`).join('');
+  sel.onchange = function() {
+    const area = document.getElementById('invite-service-info');
+    if (!this.value) { area.style.display = 'none'; return; }
+    area.style.display = 'block';
+    const id = parseInt(this.value);
+    const token = Math.random().toString(36).substr(2,10).toUpperCase();
+    document.getElementById('invite-url-display').textContent = `householdhub.dk/bid/${token}`;
+    window._currentInviteServiceId = id;
+    window._currentInviteToken = token;
+  };
+  const docSel = document.getElementById('doc-service-select');
+  docSel.innerHTML = services.map(s => `<option value="${s.id}">${s.type} — ${s.provider}</option>`).join('');
+}
+
+function copyInviteLink() {
+  const url = document.getElementById('invite-url-display').textContent;
+  navigator.clipboard.writeText('https://' + url).catch(()=>{});
+  toast('Link copied to clipboard');
+}
+
+function sendInviteEmail() {
+  const email = document.getElementById('invite-email').value.trim();
+  if (!email) { toast('Enter an email address first'); return; }
+  const svc = services.find(s => s.id === window._currentInviteServiceId);
+  invites.push({id: invites.length+1, serviceId: window._currentInviteServiceId, supplier: email.split('@')[0], email, sent: new Date().toISOString().split('T')[0], status:'sent'});
+  renderInvites();
+  document.getElementById('invite-email').value = '';
+  toast(`Invite sent to ${email}${svc?' for '+svc.type:''}`);
+}
+
+function renderInvites() {
+  const tbody = document.getElementById('invites-tbody');
+  if (!invites.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--ink3);padding:24px">No invites sent yet</td></tr>'; return; }
+  tbody.innerHTML = invites.map(inv => {
+    const svc = services.find(s => s.id === inv.serviceId);
+    const chipCls = inv.status==='bid received'?'chip-green':inv.status==='viewed'?'chip-blue':'chip-amber';
+    return `<tr>
+      <td><strong>${inv.supplier}</strong><br><span style="font-size:11px;color:var(--ink3)">${inv.email}</span></td>
+      <td>${svc?svc.type:'—'}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px">${inv.sent}</td>
+      <td><span class="chip ${chipCls}">${inv.status}</span></td>
+      <td><button class="btn btn-ghost btn-xs" onclick="revokeInvite(${inv.id})">Revoke</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function revokeInvite(id) {
+  invites = invites.filter(i => i.id !== id);
+  renderInvites();
+  toast('Invite revoked');
+}
+
+// ── Documents ──
+function renderDocuments() {
+  const tbody = document.getElementById('docs-tbody');
+  if (!documents.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--ink3);padding:24px">No documents uploaded yet</td></tr>'; return; }
+  tbody.innerHTML = documents.map(doc => {
+    const svc = services.find(s => s.id === doc.serviceId);
+    return `<tr>
+      <td>${svc?svc.icon+' '+svc.type:'—'}</td>
+      <td><strong>${doc.name}</strong></td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px">${doc.date}</td>
+      <td style="color:var(--ink3)">${doc.size}</td>
+      <td style="display:flex;gap:6px">
+        <button class="btn btn-secondary btn-xs" onclick="toast('Opening ${doc.name}…')">View</button>
+        <button class="btn btn-ghost btn-xs" onclick="deleteDoc(${doc.id})">✕</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function uploadDoc() {
+  const name = document.getElementById('doc-name').value.trim() || 'Document.pdf';
+  const svcId = parseInt(document.getElementById('doc-service-select').value);
+  documents.push({id: documents.length+1, serviceId: svcId, name, date: new Date().toISOString().split('T')[0], size:'—'});
+  renderDocuments();
+  closeModal('upload-doc-modal');
+  toast('Document uploaded');
+}
+
+function deleteDoc(id) {
+  documents = documents.filter(d => d.id !== id);
+  renderDocuments();
+  toast('Document removed');
+}
+
+// ── Add / Edit service ──
+function addService() {
+  const type = document.getElementById('new-type').value;
+  const icon = document.getElementById('new-icon').value || iconMap[type] || '📦';
+  const provider = document.getElementById('new-provider').value.trim();
+  const price = parseInt(document.getElementById('new-price').value) || 0;
+  const renewal = document.getElementById('new-renewal').value;
+  const notes = document.getElementById('new-notes').value.trim();
+  if (!provider || !price || !renewal) { toast('Please fill in provider, price, and renewal date'); return; }
+  services.push({id: nextId++, type, icon, provider, price, renewal, notes});
+  renderAll(); updateStats();
+  closeModal('add-service-modal');
+  document.getElementById('new-provider').value = '';
+  document.getElementById('new-price').value = '';
+  document.getElementById('new-renewal').value = '';
+  document.getElementById('new-notes').value = '';
+  document.getElementById('new-icon').value = '';
+  toast('Service added');
+}
+
+function openEditModal(id) {
+  const svc = services.find(s => s.id === id);
+  if (!svc) return;
+  document.getElementById('edit-service-id').value = id;
+  document.getElementById('edit-type').value = svc.type;
+  document.getElementById('edit-icon').value = svc.icon;
+  document.getElementById('edit-provider').value = svc.provider;
+  document.getElementById('edit-price').value = svc.price;
+  document.getElementById('edit-renewal').value = svc.renewal;
+  document.getElementById('edit-notes').value = svc.notes || '';
+  openModal('edit-service-modal');
+}
+
+function saveEditService() {
+  const id = parseInt(document.getElementById('edit-service-id').value);
+  const svc = services.find(s => s.id === id);
+  if (!svc) return;
+  svc.type = document.getElementById('edit-type').value;
+  svc.icon = document.getElementById('edit-icon').value || svc.icon;
+  svc.provider = document.getElementById('edit-provider').value;
+  svc.price = parseInt(document.getElementById('edit-price').value) || svc.price;
+  svc.renewal = document.getElementById('edit-renewal').value || svc.renewal;
+  svc.notes = document.getElementById('edit-notes').value;
+  renderAll(); updateStats();
+  closeModal('edit-service-modal');
+  toast('Service updated');
+}
+
+function deleteService() {
+  const id = parseInt(document.getElementById('edit-service-id').value);
+  services = services.filter(s => s.id !== id);
+  bids = bids.filter(b => b.serviceId !== id);
+  renderAll(); updateStats();
+  closeModal('edit-service-modal');
+  toast('Service deleted');
+}
+
+function submitPortalBid() {
+  toast('✓ Bid submitted to homeowner — they will review and respond shortly');
+}
+
+// ── Render all ──
+function renderAll() {
+  renderDashboard();
+  renderAllServices();
+  renderBids();
+  renderTimeline();
+  renderInviteSelect();
+  renderDocuments();
+  renderInvites();
+}
+
+// ── Modal helpers ──
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
+
+// ── Toast ──
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── Boot ──
+init();
+</script>
+</body>
+</html>
